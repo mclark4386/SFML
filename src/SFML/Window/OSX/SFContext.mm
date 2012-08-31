@@ -147,8 +147,23 @@ void SFContext::createContext(SFContext* shared,
     attrs.reserve(20); // max attributs (estimation).
     
     // These casts are safe. C++ is much more strict than Obj-C.
-    
-    attrs.push_back(NSOpenGLPFAClosestPolicy);
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+
+    // Add support for OpenGL 3.2 on Mac OS X Lion and later
+//	sf::err()<<"Settings: "<<settings.majorVersion<<":"<<settings.minorVersion<<std::endl;
+//	bool NeedCoreProfile =  (settings.majorVersion > 3 || (settings.majorVersion == 3 && settings.minorVersion >= 2));
+//    if (NeedCoreProfile) {
+        attrs.push_back(NSOpenGLPFAOpenGLProfile);
+        attrs.push_back(NSOpenGLProfileVersion3_2Core);
+//    }else{
+//        attrs.push_back(NSOpenGLPFAOpenGLProfile);
+//        attrs.push_back(NSOpenGLProfileVersionLegacy);
+//	}
+
+#endif
+
+    attrs.push_back(NSOpenGLPFAClosestPolicy);    
     attrs.push_back(NSOpenGLPFADoubleBuffer);
     
     if (bitsPerPixel > 24) {
